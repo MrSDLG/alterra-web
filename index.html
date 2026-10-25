@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Alterra — Volcano Database</title>
+  <meta name="description" content="Every volcano in Alterra on a satellite map: where it is, how high, when it last erupted, and its history.">
+  <meta name="theme-color" content="#05080c">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://tiles.maps.eox.at" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600;700&family=Chakra+Petch:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"><i class="glow g1"></i><i class="glow g2"></i><i class="sweep"></i><canvas id="bg"></canvas></div>
+
+  <header class="topbar">
+    <div class="cap l">
+      <a class="logo snd" href="#/" aria-label="Alterra volcano database"><b>A</b>LT<span>ERRA</span></a>
+      <nav class="nav" aria-label="Main">
+        <a class="snd" data-route="db" href="#/"><span class="lg">DATABASE</span><span class="sh">MAP</span></a>
+        <a class="snd" data-route="about" href="#/about"><span class="lg">ABOUT</span><span class="sh">ABOUT</span></a>
+        <a class="snd game" data-route="game" href="#/game"><span class="lg">GET THE GAME</span><span class="sh">GAME</span></a>
+      </nav>
+    </div>
+    <div class="cap r">
+      <div class="audio" role="group" aria-label="Sound">
+        <input id="a-vol" class="vol" type="range" min="0" max="1" step="0.05" value="0.6" aria-label="Volume">
+        <button class="btn snd" id="a-music" aria-pressed="true" title="Background music" aria-label="Music"><span class="ico">♫</span></button>
+        <button class="btn snd" id="a-sfx" aria-pressed="true" title="Interface sounds" aria-label="Interface sounds"><span class="ico">◉</span></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <div id="boot" class="boot"><span class="spin"></span><span>LOADING VOLCANOES…</span></div>
+
+    <section id="view-db" class="view db" data-mode="map" hidden>
+      <aside id="filters" class="filters" aria-label="Filters"></aside>
+      <div class="scrim" id="scrim" hidden></div>
+      <div class="results">
+        <div class="hud">
+          <div class="searchbar">
+            <button class="btn snd fbtn" id="open-filters">FILTERS<b id="fcount" hidden>0</b></button>
+            <div class="search-wrap">
+              <div class="search">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>
+                <input id="q" type="search" placeholder="Search a volcano, country or type" autocomplete="off" spellcheck="false" aria-label="Search volcanoes" aria-controls="suggest">
+              </div>
+              <div id="suggest" class="suggest frame" role="listbox" hidden></div>
+            </div>
+            <div class="seg" role="tablist" aria-label="View">
+              <a id="v-map" class="snd" href="#/" role="tab">MAP</a>
+              <a id="v-list" class="snd" href="#/list" role="tab">LIST</a>
+            </div>
+          </div>
+          <div class="toolbar">
+            <span id="count" class="count" aria-live="polite"></span>
+            <div class="grow"></div>
+            <label class="sort"><span>SORT BY</span><select id="sort" class="snd"></select></label>
+          </div>
+          <div id="chips" class="chips" hidden></div>
+        </div>
+
+        <div class="stage frame">
+          <div id="vlist" class="vlist" tabindex="0" aria-label="Volcano results"></div>
+          <div id="mapwrap" class="mapwrap">
+            <div id="map" role="application" aria-label="Globe of volcanoes"></div>
+            <div class="mapctl"><button class="snd" data-z="1" aria-label="Zoom in">+</button><button class="snd" data-z="-1" aria-label="Zoom out">−</button><button class="snd" data-z="0" aria-label="Show all volcanoes">⌂</button></div>
+            <div class="legend" id="legend"></div>
+            <div class="attrib">Sentinel-2 cloudless — s2maps.eu by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2024) · Volcanoes: Smithsonian GVP</div>
+            <div class="tip" id="tip" hidden></div>
+          </div>
+          <div id="empty" class="empty" hidden>
+            <b>NO VOLCANOES FOUND</b>
+            <span>Try a shorter search or remove a filter.</span>
+            <button class="btn hot snd" id="empty-clear">CLEAR EVERYTHING</button>
+          </div>
+        </div>
+
+        <div id="pick" class="pick" hidden></div>
+      </div>
+    </section>
+
+    <section id="view-detail" class="view detail" hidden></section>
+    <section id="view-about" class="view overview" hidden></section>
+    <section id="view-game" class="view game-view" hidden></section>
+  </main>
+
+  <footer class="keys" id="keys"></footer>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
